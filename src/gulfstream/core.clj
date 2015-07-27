@@ -1,5 +1,6 @@
 (ns gulfstream.core
   (:require [gulfstream.data.interop :as interop]
+            [gulfstream.generator :as gen]
             [gulfstream.graph.ui :as ui]
             [hara.common.string :as string])
   (:import [org.graphstream.graph.implementations SingleGraph MultiGraph]))
@@ -39,12 +40,16 @@
           (println "REJECTED:" (str node "->" target)))))
     graph))
 
-(defn graph [{:keys [links attributes properties title style] :as content}]
-  (let [graph  (MultiGraph. title)]
-    (alter-var-root #'*current-graph* (constantly graph))
-    (-> graph
-        (create-links links)
-        (ui/stylesheet style)
-        (ui/attributes attributes)
-        (ui/properties properties))
-    graph))
+(defn graph
+  ([] (graph {}))
+  ([{:keys [links attributes properties title style generator ui] :as config}]
+   (let [graph  (MultiGraph. title)]
+     (alter-var-root #'*current-graph* (constantly graph))
+     (-> graph
+         (create-links links)
+         (ui/configure ui)
+         (ui/stylesheet style)
+         (ui/attributes attributes)
+         (ui/properties properties)
+         (gen/hook generator))
+     graph)))
