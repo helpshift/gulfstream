@@ -6,6 +6,7 @@
  org.graphstream.graph.implementations.AbstractNode
  {:tag "node"})
 
+
 (object/extend-maplike
 
  org.graphstream.graph.implementations.AbstractGraph
@@ -13,11 +14,7 @@
   :exclude [:each-node :each-edge :node-iterator :edge-iterator
             :replay-controller :each-attribute-key
             :attribute-key-iterator]}
-
- org.graphstream.graph.implementations.AbstractEdge
- {:tag "edge"
-  :select [:source-node :target-node :index :id]}
-
+ 
  org.graphstream.ui.view.Viewer
  {:tag "ui.viewer"
   :exclude [:graphic-graph]}
