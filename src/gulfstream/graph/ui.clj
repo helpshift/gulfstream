@@ -37,6 +37,7 @@
         (.getEdge graph (->> (map string/to-string k)
                              (str/join "->")))))
 
+
 (defn attributes
   ([graph]
    (->> (concat (for [node (.getNodeSet graph)

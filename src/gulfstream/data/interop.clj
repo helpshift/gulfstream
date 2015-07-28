@@ -1,27 +1,42 @@
 (ns gulfstream.data.interop
   (:require [hara.object :as object]))
 
-(object/extend-stringlike
-
- org.graphstream.graph.implementations.AbstractNode
- {:tag "node"})
-
+(defn element-attributes
+  [element]
+  (let [res (reduce (fn [out k]
+                      (assoc out (keyword k) (.getAttribute element k)))
+                    {}
+                    (.getAttributeKeySet element))]
+    (if-not (empty? res) res)))
 
 (object/extend-maplike
+
+ org.graphstream.graph.implementations.AbstractNode
+ {:tag "node"
+  :include []
+  :getters {:id #(-> % .getId keyword)
+            :attributes element-attributes}}
+
+ org.graphstream.graph.implementations.AbstractEdge
+ {:tag "edge"
+  :include []
+  :getters {:id #(vector (-> % .getSourceNode str keyword)
+                         (-> % .getTargetNode str keyword))
+            :attributes element-attributes}}
 
  org.graphstream.graph.implementations.AbstractGraph
  {:tag "graph"
   :exclude [:each-node :each-edge :node-iterator :edge-iterator
             :replay-controller :each-attribute-key
             :attribute-key-iterator]}
- 
+
  org.graphstream.ui.view.Viewer
  {:tag "ui.viewer"
   :exclude [:graphic-graph]}
 
  org.graphstream.ui.view.View
  {:tag "ui.view"
-  :select [:x :y :camera]}
+  :include [:x :y :camera]}
 
  org.graphstream.ui.view.Camera
  {:tag "camera"}
@@ -53,6 +68,4 @@
 
 
 (comment
-  (object/extend-maplike AbstractNode
-                         {:tag "node"
-                          :select [:id :degree :attribute-key-set]}))
+  )
