@@ -8,7 +8,13 @@
                              :args []
                              :steps 100
                              :interval 100}})
-      (gs/display)))
+      (gs/display))
+
+  )
+
+(-> (gs/graph {:ui {:title "Barabasi"}})
+    (gs/display)
+    )
 
 
 

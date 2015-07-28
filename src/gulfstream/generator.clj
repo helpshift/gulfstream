@@ -51,14 +51,17 @@
   ([k args]
    (apply (get +generator-map+ k) args)))
 
-(defn hook [graph {:keys [type args steps interval] :as config}]
-  (let [gen (generator type args)]
-    (.addSink gen graph)
-    (.begin gen)
-    (future (dotimes [_ steps]
-              (Thread/sleep interval)
-              (.nextEvents gen)))
-    graph))
+(defn hook
+  ([graph] (hook graph {}))
+  ([graph {:keys [type args steps interval] :as config}]
+   (if (and config type)
+     (let [gen (generator type args)]
+       (.addSink gen graph)
+       (.begin gen)
+       (future (dotimes [_ steps]
+                 (Thread/sleep interval)
+                 (.nextEvents gen)))))
+   graph))
 
 (comment
   :generator {:type :barabasi-albert
