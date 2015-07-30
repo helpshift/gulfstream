@@ -1,32 +1,27 @@
 (ns gulfstream.graph.ui
   (:require [gulfstream.graph.css :as css]
+            [gulfstream.data.common :as common]
             [hara.common.string :as string]
             [clojure.string :as str]))
-
-(defn attribute-array [v]
-  (cond (vector? v)
-        (object-array v)
-        
-        :else
-        (object-array [v])))
 
 (defn configure
   ([graph] (configure graph {}))
   ([graph ui]
    (reduce-kv (fn [graph k v]
                 (.setAttribute graph (str "ui." (name k))
-                               (attribute-array v))
+                               (common/attribute-array v))
                 graph)
               graph
               ui)))
 
 (defn stylesheet
   ([graph]
-   (css/parse (.getAttribute graph "ui.stylesheet")))
+   (if-let [css (.getAttribute graph "ui.stylesheet")]
+     (css/parse css)))
   ([graph styles]
    (if styles
      (.setAttribute graph "ui.stylesheet"
-                    (attribute-array (css/emit (seq styles)))))
+                    (common/attribute-array (css/emit (seq styles)))))
    graph))
 
 (defn element [graph k]
@@ -36,7 +31,6 @@
         (vector? k)
         (.getEdge graph (->> (map string/to-string k)
                              (str/join "->")))))
-
 
 (defn attributes
   ([graph]

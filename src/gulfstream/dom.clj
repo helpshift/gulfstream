@@ -31,7 +31,7 @@
   (doseq [[source target] (-> diff :edges :+)]
     (let [source (to-string source) 
           target (to-string target) ]
-      (.addEdge graph (str source "->" target) source target)))
+      (.addEdge graph (str source "->" target) source target true)))
   (reduce-kv (fn [graph key attrs]
                (let [ele (graph-element graph key)]
                  (doseq [k (keys attrs)]

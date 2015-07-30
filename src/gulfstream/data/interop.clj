@@ -1,34 +1,47 @@
 (ns gulfstream.data.interop
-  (:require [hara.object :as object]))
+  (:require [hara.object :as object]
+            [hara.common.string :refer [to-string]]
+            [gulfstream.data.common :as common]))
 
-(defn element-attributes
+(defn get-attributes
   [element]
   (let [res (reduce (fn [out k]
                       (assoc out (keyword k) (.getAttribute element k)))
                     {}
                     (.getAttributeKeySet element))]
-    (if-not (empty? res) res)))
+    (if-not (empty? res)
+      (dissoc res :ui.stylesheet))))
+
+(defn set-attributes
+  [element attrs]
+  (reduce-kv (fn [element k v]
+               (.setAttribute element (to-string k) (common/attribute-array v))
+               element)
+             element
+             (dissoc attrs :ui.stylesheet)))
 
 (object/extend-maplike
 
  org.graphstream.graph.implementations.AbstractNode
  {:tag "node"
-  :include []
+  :default false
   :getters {:id #(-> % .getId keyword)
-            :attributes element-attributes}}
+            :attributes get-attributes}
+  :setters {:attributes set-attributes}}
 
  org.graphstream.graph.implementations.AbstractEdge
  {:tag "edge"
-  :include []
+  :default false
   :getters {:id #(vector (-> % .getSourceNode str keyword)
                          (-> % .getTargetNode str keyword))
-            :attributes element-attributes}}
+            :attributes get-attributes}
+  :setters {:attributes set-attributes}}
 
  org.graphstream.graph.implementations.AbstractGraph
  {:tag "graph"
-  :exclude [:each-node :each-edge :node-iterator :edge-iterator
-            :replay-controller :each-attribute-key
-            :attribute-key-iterator]}
+  :include [:node-set :edge-set :strict? :index :step]
+  :getters {:attributes get-attributes}
+  :setters {:attributes set-attributes}}
 
  org.graphstream.ui.view.Viewer
  {:tag "ui.viewer"
@@ -65,7 +78,3 @@
   :getters {:x #(.x %)
             :y #(.y %)
             :z #(.z %)}})
-
-
-(comment
-  )
