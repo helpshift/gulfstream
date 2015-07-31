@@ -1,13 +1,7 @@
 (ns gulfstream.data.interop
   (:require [hara.object :as object]
-            [hara.common.string :refer [to-string]]))
-
-(defn attribute-array [v]
-  (cond (vector? v)
-        (object-array v)
-
-        :else
-        (object-array [v])))
+            [hara.common.string :refer [to-string]]
+            [gulfstream.data.common :as common]))
 
 (defn get-attributes
   [element]
@@ -21,7 +15,7 @@
 (defn set-attributes
   [element attrs]
   (reduce-kv (fn [element k v]
-               (.setAttribute element (to-string k) (attribute-array v))
+               (.setAttribute element (to-string k) (common/attribute-array v))
                element)
              element
              (dissoc attrs :ui.stylesheet)))

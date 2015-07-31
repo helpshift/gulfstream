@@ -1,9 +1,9 @@
 (ns gulfstream.core
   (:require [gulfstream.data.interop :as interop]
-            [gulfstream.generator :as gen]
-            [gulfstream.graph.ui :as ui]
+            [gulfstream.graph :as graph]
+            [gulfstream.graph.dom :as dom]
             [hara.common.string :as string])
-  (:import [org.graphstream.graph.implementations SingleGraph MultiGraph]))
+  (:import [org.graphstream.graph.implementations MultiGraph]))
 
 (def ^:dynamic *current-viewer* nil)
 (def ^:dynamic *current-graph* nil)
@@ -27,29 +27,13 @@
      (alter-var-root #'*current-camera* (constantly (.getCamera (.getDefaultView viewer))))
      viewer)))
 
-(defn create-links [graph links]
-  (let [nodes (keys links)]
-    (doseq [node (map string/to-string nodes)]
-      (.addNode graph node))
-    (doseq [node   (map string/to-string nodes)
-            target (->> (get links (keyword node))
-                        (map string/to-string))]
-      (try
-        (.addEdge graph (str node "->" target) node target true)
-        (catch Throwable e
-          (println "REJECTED:" (str node "->" target)))))
-    graph))
-
-(defn graph
-  ([] (graph {}))
-  ([{:keys [links attributes properties title style generator ui] :as config}]
-   (let [graph  (MultiGraph. title)]
-     (alter-var-root #'*current-graph* (constantly graph))
-     (-> graph
-         (create-links links)
-         (ui/configure ui)
-         (ui/stylesheet style)
-         (ui/attributes attributes)
-         (ui/properties properties)
-         (gen/hook generator))
-     graph)))
+ (defn graph
+   ([] (graph {}))
+   ([{:keys [style dom attributes name] :as config}]
+    (let [graph  (MultiGraph. name)]
+      (alter-var-root #'*current-graph* (constantly graph))
+      (-> graph
+          (dom/renew dom)
+          (graph/stylesheet style)
+          (interop/set-attributes attributes))
+      graph)))

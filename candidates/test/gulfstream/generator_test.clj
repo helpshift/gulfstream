@@ -13,6 +13,8 @@
                          :c #{}}
              :properties  {:ui.class {"axis" #{:a :c}}}})
 
+  (object/to-data gs/*current-graph*)
+
 
   (dom/dom gs/*current-graph*)
   (dom/diff gs/*current-graph* {:a {:attributes {:ui.class2 "axis"}}
@@ -37,10 +39,6 @@
   
   
   (dom/diff gs/*current-graph* {})
-  
-  
-  
-  
   
   (-> (gs/graph {:ui {:title "Barabasi"}
            
@@ -69,6 +67,12 @@
   (.* (.getEdge gs/*current-graph* "b->a") :name)
   ("addAttribute" "addAttributes" "attributeChanged" "attributes" "attributesBeingRemoved" "changeAttribute" "clearAttributes" "clearAttributesWithNoEvent" "clone" "directed" "equals" "finalize" "getArray" "getAttribute" "getAttributeCount" "getAttributeKeyIterator" "getAttributeKeySet" "getClass" "getEachAttributeKey" "getFirstAttributeOf" "getHash" "getId" "getIndex" "getLabel" "getNode0" "getNode1" "getNumber" "getOpposite" "getSourceNode" "getTargetNode" "getVector" "graph" "hasArray" "hasAttribute" "hasHash" "hasLabel" "hasNumber" "hasVector" "hashCode" "id" "index" "isDirected" "isLoop" "notify" "notifyAll" "nullAttributesAreErrors" "removeAttribute" "setAttribute" "setIndex" "source" "target" "toString" "wait")
 
+  (.getNode gs/*current-graph* "1")
+  (first (.getEdgeSet gs/*current-graph*))
+
+  (type gs/*current-graph*)
+  (object/meta-object org.graphstream.graph.implementations.MultiGraph)
+  
   (.getNode gs/*current-graph* "a")
 
   
