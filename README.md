@@ -20,6 +20,7 @@ All functionality is in the core namespace:
 
 Lets start off by graphing a casual relationship between social empowerment and the avaliability of junk foods [source](http://ih.constantcontact.com/fs076/1103736801437/img/25.png?a=1110052009119).
 
+```clojure
 (-> (gs/graph
      {:attributes {:layout.quality 1.0 :layout.force 0.8}
       :dom (gs/expand {:links
@@ -49,6 +50,7 @@ Lets start off by graphing a casual relationship between social empowerment and 
                         :vending-machines   {:label "Vending Machines"}
                         :vegetable          {:label "Fruit and Vegetable"}}})})
     (gs/display))
+```
 
 Something like this will now pop up on the screen:
 
