@@ -38,8 +38,17 @@
           (interop/set-attributes attributes))
       graph)))
 
-(defn screenshot [viewer graph path]
-  (.addAttribute graph "ui.screenshot" (interop/attribute-array path)))
+(defn screenshot
+  ([path] (screenshot *current-viewer* *current-graph* path))
+  ([graph path] (screenshot *current-viewer* graph path))
+  ([viewer graph path]
+   (cond (nil? viewer)
+         (throw (Exception. "Cannot save image without viewer"))
+   
+         (nil? graph)
+         (throw (Exception. "Cannot save image without graph"))
+
+         :else (.addAttribute graph "ui.screenshot" (interop/attribute-array path)))))
 
 (defn expand [{:keys [links attributes elements options] :as shortform}]
   (let [elements (reduce-kv (fn [elements source targets]
