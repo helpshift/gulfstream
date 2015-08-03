@@ -11,7 +11,7 @@
     (zipmap (map :id data) (map :attributes data))))
 
 (defn element [graph k]
-  (cond (keyword? k)
+  (cond (or (string? k) (keyword? k) (symbol? k))
         (.getNode graph (s/to-string k))
 
         (vector? k)
@@ -35,7 +35,7 @@
                    (.removeAttribute ele (s/to-string k)))
                  graph))
              graph
-             (-> diff :-))
+             (-> diff :attributes :-))
   (reduce-kv (fn [graph key attrs]
                (let [ele (element graph key)]
                  (reduce-kv (fn [ele ak av]
@@ -44,17 +44,17 @@
                             attrs)
                  graph))
              graph
-             (-> diff :+)))
+             (-> diff :attributes :+)))
 
 (defn diff-element [out key sign]
   (let [type (if (vector? key) :edges :nodes)]
     (update-in out [type sign] (fnil #(conj % key) #{}))))
 
 (defn diff-attributes [out arr v sign]
-  (let [arr (concat [sign] arr)]
+  (let [arr (concat [:attributes sign] arr)]
     (case (count arr)
-      2 (update-in out arr merge v)
-      3 (assoc-in out arr v))))
+      3 (update-in out arr merge v)
+      4 (assoc-in out arr v))))
 
 (defn diff [graph new]
   (let [changes (diff/diff new (get-dom graph))
@@ -77,33 +77,3 @@
 (defn set-dom [graph dom]
   (->> (diff graph dom)
        (patch graph)))
-
-
-(comment
-  (diff/diff
-   {[:b :a] {:attributes {:ui.class "link"}}, [:b :c] {}, :c {:attributes {:ui.class "axis"}, :degree 1}, :b {:degree 2}, :a {:attributes {:ui.class "axis"}, :degree 1}}
-   {[:b :a] {}, [:b :c] {}, :c {:attributes {:ui.class "axis"}, :degree 1}, :b {:degree 2}, :a {:attributes {:ui.class "axis"}, :degree 1}})
-
-  (diff/diff
-   {[:b :a] {}}
-   {[:b :a] {:attributes {:ui.class "link"}}})
-  => {:> {},
-      :- {[[:b :a] :attributes] {:ui.class "link"}},
-      :+ {}}
-
-  {:nodes {:+ [:b :c] :- []}
-   :edges {:+ [[:b :c]] :- [[:c :a]]}
-   :attributes {:+ {[:b :c] {:ui.class "axis"}}
-                :- {[:b :c] {:ui.flip  true}}}}
-
-  (diff/diff
-   {}
-   {[:b :a] {:attributes {:ui.class "link"}}})
-  => {:> {}, :- {[[:b :a]] {:attributes {:ui.class "link"}}}, :+ {}}
-
-  (diff/diff
-   {[:b :a] {:attributes {:ui.class "hello"}}}
-   {[:b :a] {:attributes {:ui.class "link"}}})
-  => {:> {[[:b :a] :attributes :ui.class] "hello"},
-      :- {},
-      :+ {}})

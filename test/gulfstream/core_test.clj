@@ -1,14 +1,26 @@
 (ns gulfstream.core-test
-  (:use midje.sweet)
+  ;;(:use midje.sweet)
   (:require [gulfstream.core :refer :all]
             [gulfstream.graph :as graph]
-            [gulfstream.graph.dom :as dom]))
+            [gulfstream.graph.dom :as dom]
+            [hara.object :as object]))
 
 (comment
   (def g (graph))
   (display g)
+  g
   
+
+  (object/to-data g)
+  {:attributes {}, :step 0.0, :index 0, :strict? true, :edge-set [{:id [:a :c]} {:id [:b :a]} {:attributes {:label "e->d"}, :id [:e :d]}], :node-set [{:id :c} {:id :b} {:id :a} {:attributes {:label "e"}, :id :e} {:attributes {:label "d"}, :id :d}]}
   
+  (graph/stylesheet *current-graph* [[:node.axis {:fill-color "#00c"
+                                                  :size "20px"}]
+                                     [:node {:fill-color "green"}]
+                                     [:node:clicked
+                                      {:fill-color "red"}]
+                                     [:edge {:arrow-shape "arrow"
+                                             :arrow-size "10px, 10px"}]])
   (graph/dom *current-graph*)
   
   (graph/dom *current-graph* {[:b :a] {}
@@ -19,6 +31,9 @@
                               :a {:ui.class "axis" :label "a"}
                               :d {:label "d"}
                               :e {:label "e"}})
+
+  
+  (screenshot *current-graph* "hello.png")
   
   (graph/expand {:links   {:o #{:x :y :z}
                            :x #{}

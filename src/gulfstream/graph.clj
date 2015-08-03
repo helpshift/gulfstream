@@ -24,21 +24,3 @@
    (dom/get-dom graph))
   ([graph dom]
    (dom/set-dom graph dom)))
-
-(defn expand [{:keys [links attributes elements options] :as shortform}]
-  (let [elements (reduce-kv (fn [elements source targets]
-                              (reduce (fn [elements target]
-                                        (update-in elements [[source target]] (fnil identity {})))
-                                      (update-in elements [source] (fnil identity {}))
-                                      targets))
-                            elements
-                            links)]
-    (reduce-kv (fn [elements prop vmap]
-                 (reduce-kv (fn [elements value tags]
-                              (reduce (fn [elements tag]
-                                        (assoc-in elements [tag prop] value))
-                                      elements tags))
-                            elements
-                            vmap))
-               elements
-               attributes)))

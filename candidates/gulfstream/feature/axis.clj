@@ -1,3 +1,0 @@
-(ns gulfstream.feature.axis)
-
-()

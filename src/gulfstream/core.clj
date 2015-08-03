@@ -5,9 +5,9 @@
             [hara.common.string :as string])
   (:import [org.graphstream.graph.implementations MultiGraph]))
 
-(def ^:dynamic *current-viewer* nil)
-(def ^:dynamic *current-graph* nil)
-(def ^:dynamic *current-camera* nil)
+(defonce ^:dynamic *current-viewer* nil)
+(defonce ^:dynamic *current-graph* nil)
+(defonce ^:dynamic *current-camera* nil)
 
 (defn disable-mouse [viewer]
   (let [view     (.getDefaultView viewer)
@@ -33,7 +33,28 @@
     (let [graph  (MultiGraph. name)]
       (alter-var-root #'*current-graph* (constantly graph))
       (-> graph
-          (dom/renew dom)
+          (graph/dom dom)
           (graph/stylesheet style)
           (interop/set-attributes attributes))
       graph)))
+
+(defn screenshot [viewer graph path]
+  (.addAttribute graph "ui.screenshot" (interop/attribute-array path)))
+
+(defn expand [{:keys [links attributes elements options] :as shortform}]
+  (let [elements (reduce-kv (fn [elements source targets]
+                              (reduce (fn [elements target]
+                                        (update-in elements [[source target]] (fnil identity {})))
+                                      (update-in elements [source] (fnil identity {}))
+                                      targets))
+                            elements
+                            links)]
+    (reduce-kv (fn [elements prop vmap]
+                 (reduce-kv (fn [elements value tags]
+                              (reduce (fn [elements tag]
+                                        (assoc-in elements [tag prop] value))
+                                      elements tags))
+                            elements
+                            vmap))
+               elements
+               attributes)))
