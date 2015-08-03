@@ -84,14 +84,14 @@ Styling can be applied using css in the `:style` section of the dom:
                        :elements
                        {:social-disorder    {:label "Social Disorder"}
                         :avaliability       {:label "Avaliability of Junk Food"
-			                     :ui.class ["big" "red"]}
+			                                       :ui.class ["big" "red"]}
                         :poverty            {:label "Poverty"
-			                     :ui.class ["big" "green"]}
+			                                       :ui.class ["big" "green"]}
                         :stress             {:label "Stress"}
                         :safety             {:label "Perceived Neighbourhood Safety"}
                         :financial-stablity {:label "Financial Stablity"}
                         :jobs               {:label "Jobs"
-			                     :ui.class "green"}
+			                                       :ui.class "green"}
                         :kids-off-streets   {:label "Kids off the Streets"}
                         :government-support {:label "Government Support"}
                         :meals              {:label "Healthy Meals per Day"}
@@ -99,7 +99,7 @@ Styling can be applied using css in the `:style` section of the dom:
                         :marketing          {:label "Unhealthy Marketing"}
                         :vending-machines   {:label "Vending Machines"}
                         :vegetable          {:label "Fruit and Vegetable"
-			                      :ih-class "green"}}})
+			                                       :ui.class "green"}}})
       :style [["node.green" {:fill-color "green"}]
               ["node.red"   {:fill-color "red"}]
               ["node.big"   {:size "20px"}]]})
@@ -108,4 +108,4 @@ Styling can be applied using css in the `:style` section of the dom:
 
 We can then render the same graph with styling:
 
-![styled graph](https://cloud.githubusercontent.com/assets/1455572/9034468/8f1bd346-39ed-11e5-920f-615cc7da75c1.png)
+![styled graph](https://cloud.githubusercontent.com/assets/1455572/9034701/62992498-39ef-11e5-890d-d080c769b7cc.png)
