@@ -3,7 +3,9 @@
             [gulfstream.graph :as graph]
             [gulfstream.graph.dom :as dom]
             [hara.common.string :as string])
-  (:import [org.graphstream.graph.implementations MultiGraph]))
+  (:import [org.graphstream.graph.implementations MultiGraph]
+           [org.graphstream.ui.view Viewer Viewer$ThreadingModel]
+           [org.graphstream.ui.swingViewer GraphRenderer]))
 
 (defonce ^:dynamic *current-viewer* nil)
 (defonce ^:dynamic *current-graph* nil)
@@ -13,6 +15,34 @@
   (let [view     (.getDefaultView viewer)
         listener (-> view (.getMouseListeners) seq first)]
     (.removeMouseListener view listener)))
+
+(defn add-viewer-listener [viewer {:keys [on-push on-release on-exit]}]
+  (let [pipe (doto (.newViewerPipe viewer)
+               (.addViewerListener (reify org.graphstream.ui.view.ViewerListener
+                                     (buttonPushed [_ id]
+                                       ((or on-push identity) id))
+                                     (buttonReleased [_ id]
+                                       ((or on-release identity) id))
+                                     (viewClosed [_ name]
+                                       ((or on-exit identity) name)))))]
+    (future
+      (loop []
+        (if (and (.getDefaultView viewer)
+                 (.isShowing (.getDefaultView viewer)))
+          (do (.blockingPump pipe)
+              (recur)))))
+    viewer))
+
+(defn add-key-listener [viewer {:keys [on-push on-release on-typed]}]
+  (.addKeyListener (.getDefaultView viewer)
+                   (reify java.awt.event.KeyListener
+                     (keyPressed [_ e]
+                       ((or on-push identity) e))
+                     (keyReleased [_ e]
+                       ((or on-release identity) e))
+                     (keyTyped [_ e]
+                       ((or on-typed identity) e))))
+  viewer)
 
 (defn display
   ([graph] (display graph {}))
@@ -26,6 +56,13 @@
      (alter-var-root #'*current-viewer* (constantly viewer))
      (alter-var-root #'*current-camera* (constantly (.getCamera (.getDefaultView viewer))))
      viewer)))
+
+(defn view
+  ([graph]
+   (let [viewer (Viewer. graph Viewer$ThreadingModel/GRAPH_IN_ANOTHER_THREAD)
+         renderer (Viewer/newGraphRenderer)
+         panel      (.addView viewer Viewer/DEFAULT_VIEW_ID renderer)]
+    panel)))
 
  (defn graph
    ([] (graph {}))

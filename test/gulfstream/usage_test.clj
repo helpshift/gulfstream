@@ -36,7 +36,7 @@
 
 
 
-(gs/screenshot gs/*current-graph* "poverty.png")
+(gs/screenshot gs/*current-graph* "poverty3.png")
 
 (-> (gs/graph
      {:attributes {:layout.quality 1.0 :layout.force 0.8}
@@ -69,7 +69,8 @@
                         :marketing          {:label "Unhealthy Marketing"}
                         :vending-machines   {:label "Vending Machines"}
                         :vegetable          {:label "Fruit and Vegetable"
-			                      :ih-class "green"}}})
+                                             :ui.class "green"}}})
       :style [["node.green" {:fill-color "green"}]
-              ["node.red" {:fill-color "red"}]]})
+              ["node.red"   {:fill-color "red"}]
+              ["node.big"   {:size "20px"}]]})
     (gs/display))
