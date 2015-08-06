@@ -18,7 +18,7 @@ All functionality is in the core namespace:
 
 ## Quickstart
 
-Lets start off by graphing a casual relationship between social empowerment and the avaliability of junk foods [source](http://ih.constantcontact.com/fs076/1103736801437/img/25.png?a=1110052009119).
+Lets start off by graphing a causal relationship between social empowerment and the avaliability of junk foods [source](http://ih.constantcontact.com/fs076/1103736801437/img/25.png?a=1110052009119).
 
 ```clojure
 (-> (gs/graph
