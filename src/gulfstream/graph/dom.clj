@@ -1,5 +1,5 @@
 (ns gulfstream.graph.dom
-  (:require [gulfstream.data.interop :as interop]
+  (:require [gulfstream.util :as util]
             [hara.data.diff :as diff]
             [hara.object :as object]
             [hara.common.string :as s]
@@ -39,7 +39,7 @@
   (reduce-kv (fn [graph key attrs]
                (let [ele (element graph key)]
                  (reduce-kv (fn [ele ak av]
-                              (doto ele (.setAttribute (s/to-string ak) (interop/attribute-array av))))
+                              (doto ele (.setAttribute (s/to-string ak) (util/attribute-array av))))
                             ele
                             attrs)
                  graph))
@@ -52,6 +52,7 @@
 
 (defn make-patch-attributes [out arr v sign]
   (let [arr (concat [:attributes sign] arr)]
+    (println "PATCH:" arr)
     (case (count arr)
       3 (update-in out arr merge v)
       4 (assoc-in out arr v))))

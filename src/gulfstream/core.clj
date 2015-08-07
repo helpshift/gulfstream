@@ -12,8 +12,9 @@
   [v w]
   (.write w (str (into {} v))))
 
-(defn browse [{:keys [dom style attributes options listeners]}]
+(defn browse [{:keys [dom style attributes options listeners] :as m}]
   (let [graph   (graph/graph {:dom dom :style style :attributes attributes})
+        more    (dissoc m :dom :style :attributes)
         shadow  (atom dom)
         {:keys [keyboard node]} listeners
         viewer  (graph/display graph options)
@@ -23,9 +24,10 @@
         viewer  (if keyboard
                   (graph/add-key-listener viewer keyboard)
                   viewer)
-        browser (map->Browser {:graph  graph
-                               :dom    shadow
-                               :viewer viewer})]
+        browser (map->Browser (merge {:graph  graph
+                                      :dom    shadow
+                                      :viewer viewer}
+                                     more))]
     (add-watch shadow :pipeline
                (fn [_ _ p n]
                  (dom/patch-dom graph (diff/diff n p)))) 
@@ -43,6 +45,9 @@
   :setters {:attributes #(object/access (:graph %1) :attributes %2)
             :style      #(object/access (:graph %1) :style %2)
             :dom        #(reset! (:dom %1) %2)}})
+
+
+
 
 (comment
   (browse {:dom {:a {:label "a"}
