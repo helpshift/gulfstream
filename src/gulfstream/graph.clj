@@ -36,7 +36,7 @@
      (alter-var-root #'+current-camera+ (constantly (.getCamera (.getDefaultView viewer))))
      viewer)))
 
-(defn add-viewer-listener [viewer {:keys [on-push on-release on-exit]}]
+(defn add-node-listener [viewer {:keys [on-push on-release on-exit]}]
   (let [pipe (doto (.newViewerPipe viewer)
                (.addViewerListener (reify org.graphstream.ui.view.ViewerListener
                                      (buttonPushed [_ id]
