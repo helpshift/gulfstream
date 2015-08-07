@@ -1,7 +1,6 @@
 (ns gulfstream.graph.css
   (:require [hara.object :as object]
-            [garden.core :as css]
-            [gulfstream.util :as util])
+            [garden.core :as css])
   (:import [com.steadystate.css.parser CSSOMParser]
            [org.w3c.css.sac InputSource]
            [java.io StringReader]))
@@ -39,10 +38,19 @@
 (defn get-stylesheet
   [graph]
   (if-let [css (.getAttribute graph "ui.stylesheet")]
-    (parse css)))
+    (css/parse css)))
 
  (defn set-stylesheet
    [graph stylesheet]
    (if stylesheet
         (.setAttribute graph "ui.stylesheet"
-                       (util/attribute-array (emit (seq stylesheet))))))
+                       (interop/attribute-array (css/emit (seq stylesheet))))))
+
+(comment
+  (-> [[:edge {:arrow-shape "arrow"
+               :arrow-size "10, 10"}]
+       [:node {:shape "freeplane"}]]
+      emit
+      parse)
+  => [[:edge {:arrow-size "10, 10", :arrow-shape "arrow"}]
+      [:node {:shape "freeplane"}]])
