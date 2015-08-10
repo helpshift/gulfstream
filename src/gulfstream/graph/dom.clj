@@ -52,7 +52,6 @@
 
 (defn make-patch-attributes [out arr v sign]
   (let [arr (concat [:attributes sign] arr)]
-    (println "PATCH:" arr)
     (case (count arr)
       3 (update-in out arr merge v)
       4 (assoc-in out arr v))))

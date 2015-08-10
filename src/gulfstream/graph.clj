@@ -1,5 +1,7 @@
 (ns gulfstream.graph
   (:require [hara.object :as object]
+            [hara.common.string :as string]
+            [clojure.string :refer [join]]
             [gulfstream.interop :as interop])
   (:import  [org.graphstream.graph.implementations MultiGraph]))
 
@@ -9,14 +11,17 @@
 
 (defn graph
   ([] (graph {}))
-  ([{:keys [style dom attributes name] :as config}]
-   (let [graph  (MultiGraph. name)]
+  ([{:keys [style dom attributes title] :as config}]
+   (let [graph  (MultiGraph. title)]
      (alter-var-root #'+current-graph+ (constantly graph))
-     (-> graph
-         (object/access :dom dom)
-         (object/access :style style)
-         (object/access :attributes attributes))
-     graph)))
+     (->> (select-keys config [:dom :style :attributes :title])
+          (object/access graph)))))
+
+(defn element [graph id]
+  (if (vector? id)
+    (.getEdge graph (->> (map string/to-string id)
+                         (join "->")))
+    (.getNode graph (string/to-string id))))
 
 (defn disable-mouse [viewer]
   (let [view     (.getDefaultView viewer)
@@ -69,4 +74,6 @@
   (display (graph {:dom {:a {:label "a"}
                          :b {:label "b"}
                          [:a :b] {}}
-                   :style [[:node.selected {:size "20px"}]]})))
+                   :style [[:node.selected {:size "20px"}]]}))
+  +current-graph+
+  )

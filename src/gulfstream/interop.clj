@@ -12,15 +12,19 @@
                     {}
                     (.getAttributeKeySet element))]
     (if-not (empty? res)
-      (dissoc res :ui.stylesheet))))
+      (dissoc res :ui.stylesheet :ui.title))))
 
 (defn set-attributes
   [element attrs]
   (reduce-kv (fn [element k v]
-               (.setAttribute element (string/to-string k) (util/attribute-array v))
+               (if (or (nil? v)
+                       (and (vector? v)
+                            (empty? v)))
+                 (.removeAttribute element (string/to-string k))
+                 (.setAttribute element (string/to-string k) (util/attribute-array v)))
                element)
              element
-             (dissoc attrs :ui.stylesheet)))
+             (dissoc attrs :ui.stylesheet :ui.title)))
 
 (object/extend-maplike
 
@@ -44,10 +48,12 @@
   :include [:node-set :edge-set :strict? :index :step]
   :getters {:attributes get-attributes
             :dom dom/get-dom
-            :style css/get-stylesheet}
+            :style css/get-stylesheet
+            :title #(.getAttribute % "ui.title")}
   :setters {:attributes set-attributes
             :dom dom/set-dom
-            :style css/set-stylesheet}
+            :style css/set-stylesheet
+            :title #(.setAttribute %1 "ui.title" (util/attribute-array %2))}
   :hide    [:node-set :edge-set :strict? :index :step]}
 
  org.graphstream.ui.view.Viewer

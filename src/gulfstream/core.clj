@@ -41,18 +41,22 @@
   :default false
   :getters {:attributes #(object/access (:graph %) :attributes)
             :style      #(object/access (:graph %) :style)
-            :dom        #(-> % :dom deref)}
-  :setters {:attributes #(object/access (:graph %1) :attributes %2)
-            :style      #(object/access (:graph %1) :style %2)
-            :dom        #(reset! (:dom %1) %2)}})
-
-
-
+            :dom        #(-> % :dom deref)
+            :title      #(-> (:graph %) (object/access :attributes) :ui.title)}
+  :setters {:attributes (fn [b attrs]
+                          (object/access (:graph b) :attributes attrs)
+                          b)
+            :style      (fn [b style]
+                          (object/access (:graph b) :style style)
+                          b)
+            :dom        (fn [b dom]
+                          (reset! (:dom b) dom)
+                          b)
+            :title      (fn [b title]
+                          (object/access (:graph b) :attributes {:ui.title title})
+                          b)}})
 
 (comment
-  (browse {:dom {:a {:label "a"}
-                 :b {:label "b"}
-                 [:a :b] {}}})
 
   (object/access +current+ :dom {:c {:label "c"}
                                  :b {:label "b"}
