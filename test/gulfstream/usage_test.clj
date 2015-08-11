@@ -8,9 +8,9 @@
                            :dom {:a {:label "a"}
                                  :b {:label "b"}
                                  [:a :b] {:label "a->b"}}}))
-
+  
   (browser)
-  => {:getters (:attributes :style :dom :title), :setters (:attributes :style :dom :title)}
+  
 
   
   (browser :title)
@@ -22,7 +22,7 @@
                   [:a :b] {:label "a->b" :ui.class "sinking"}
                   [:b :c] {:label "b->c"}
                   [:c :a] {:label "c->a"}}})
-
+  
   (browser :node)
 
   (browser :style [["node#a" {:fill-color "green"

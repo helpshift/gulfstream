@@ -1,4 +1,4 @@
-(defproject helpshift/gulfstream "0.1.6"
+(defproject helpshift/gulfstream "0.1.7"
   :description "graphing library wrapper built on top of graphstream"
   :url "https://www.github.com/helpshift/gulfstream"
   :license {:name "Eclipse Public License"
@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [garden "1.2.5"]
                  [net.sourceforge.cssparser/cssparser "0.9.16"]
-                 [im.chit/hara.object "2.2.6"]
+                 [im.chit/hara.object "2.2.7"]
                  [im.chit/hara.data.diff "2.2.6"]
                  [org.graphstream/gs-ui "1.3"]]
   :profiles {:dev {:dependencies [[midje "1.7.0"]]

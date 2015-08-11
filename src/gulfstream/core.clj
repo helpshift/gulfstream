@@ -22,25 +22,9 @@
  Browser
  {:tag "browser"
   :default false
-  ;; This will replace all getters and setters except the `:dom` key when using hara.object 2.2.7
   :proxy   {:graph [:attributes :style :title]}
-
-  :getters {:attributes #(object/access (:graph %) :attributes)
-            :style      #(object/access (:graph %) :style)
-            :dom        #(-> % :dom deref)
-            :title      #(object/access (:graph %) :title)}
-  :setters {:attributes (fn [b attrs]
-                          (object/access (:graph b) :attributes attrs)
-                          b)
-            :style      (fn [b style]
-                          (object/access (:graph b) :style style)
-                          b)
-            :dom        (fn [b dom]
-                          (reset! (:dom b) dom)
-                          b)
-            :title      (fn [b title]
-                          (object/access (:graph b) :title title)
-                          b)}})
+  :getters {:dom (fn [b] (-> b :dom deref))}
+  :setters {:dom (fn [b dom] (reset! (:dom b) dom) b)}})
 
 (defn browse
   "returns a browser object for viewing and updating a graph. The browser includes
