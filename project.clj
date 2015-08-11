@@ -7,6 +7,7 @@
                  [garden "1.2.5"]
                  [net.sourceforge.cssparser/cssparser "0.9.16"]
                  [im.chit/hara.object "2.2.5"]
+                 [im.chit/hara.data.diff "2.2.5"]
                  [org.graphstream/gs-ui "1.3"]]
   :profiles {:dev {:dependencies [[midje "1.7.0"]]
                   :plugins [[lein-midje "3.1.3"]]}})
