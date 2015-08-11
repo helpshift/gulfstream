@@ -1,4 +1,4 @@
-(defproject helpshift/gulfstream "0.1.5"
+(defproject helpshift/gulfstream "0.1.6"
   :description "graphing library wrapper built on top of graphstream"
   :url "https://www.github.com/helpshift/gulfstream"
   :license {:name "Eclipse Public License"

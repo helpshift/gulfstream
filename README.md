@@ -1,111 +1,101 @@
 # gulfstream
 
-An idiomatic Clojure wrapper over [Graphstream](http://graphstream-project.org/)
+Wickedly simple graph visualization
 
 ## Installation
 
 Add to `project.clj`:
 
 ```clojure
-[helpshift/gulfstream "0.1.0"]
+[helpshift/gulfstream "0.1.6"]
 ```
 
-All functionality is in the core namespace:
+Functionality is in the core namespace:
 
 ```clojure
 (require '[gulfstream.core :as gs])
 ```
 
+## Motivation
+
+[gulfstream]() uses the [graphstream](http://graphstream-project.org/) to allow simple
+
+
 ## Quickstart
 
-Lets start off by graphing a causal relationship between social empowerment and the avaliability of junk foods [source](http://ih.constantcontact.com/fs076/1103736801437/img/25.png?a=1110052009119).
+Lets draw the most simple graph we possibly could:
 
 ```clojure
-(-> (gs/graph
-     {:attributes {:layout.quality 1.0 :layout.force 0.8}
-      :dom (gs/expand {:links
-                       {:poverty #{:mental-health :meals :avaliability :vegetable :government-support :stress}
-                        :government-support #{:financial-stablity}
-                        :financial-stablity #{:stress}
-                        :jobs #{:financial-stablity :poverty}
-                        :meals #{:vegetable :meals}
-                        :kids-off-streets #{:safety}
-                        :marketing #{:avaliability}
-                        :vending-machines #{:avaliability}
-                        :avaliability #{:social-disorder}
-                        :social-disorder #{:safety}}
-                       :elements
-                       {:social-disorder    {:label "Social Disorder"}
-                        :avaliability       {:label "Avaliability of Junk Food"}
-                        :poverty            {:label "Poverty"}
-                        :stress             {:label "Stress"}
-                        :safety             {:label "Perceived Neighbourhood Safety"}
-                        :financial-stablity {:label "Financial Stablity"}
-                        :jobs               {:label "Jobs"}
-                        :kids-off-streets   {:label "Kids off the Streets"}
-                        :government-support {:label "Government Support"}
-                        :meals              {:label "Healthy Meals per Day"}
-                        :mental-health      {:label "Mental Health"}
-                        :marketing          {:label "Unhealthy Marketing"}
-                        :vending-machines   {:label "Vending Machines"}
-                        :vegetable          {:label "Fruit and Vegetable"}}})})
-    (gs/display))
+(def browser (gs/browse {:title "Simple"
+                           :dom {:a {:label "a"}
+                                 :b {:label "b"}
+                                 [:a :b] {:label "a->b"}}}))
 ```
 
-Something like this will now pop up on the screen:
+We should see a window popping up as follows:
 
-![Junk Food](https://cloud.githubusercontent.com/assets/1455572/9034089/aab032a8-39ea-11e5-8b72-689fa7247be5.png)
+![simple](https://cloud.githubusercontent.com/assets/1455572/9192352/fab7bf3a-4027-11e5-8fd6-19d4f5d9d4d5.png)
 
-
-We can take a screenshot:
+We can see what properties are accessible by calling browser with no arguments:
 
 ```clojure
-(gs/screenshot "<path-to-screenshot>")
+(browser)
+;=> {:getters (:attributes :style :dom :title), :setters (:attributes :style :dom :title)}
 ```
 
-## Styling
+For instance, we can access the title like this:
 
-Styling can be applied using css in the `:style` section of the dom:
-
-````clojure
-(-> (gs/graph
-     {:attributes {:layout.quality 1.0 :layout.force 0.8}
-      :dom (gs/expand {:links
-                       {:poverty #{:mental-health :meals :avaliability :vegetable :government-support :stress}
-                        :government-support #{:financial-stablity}
-                        :financial-stablity #{:stress}
-                        :jobs #{:financial-stablity :poverty}
-                        :meals #{:vegetable :meals}
-                        :kids-off-streets #{:safety}
-                        :marketing #{:avaliability}
-                        :vending-machines #{:avaliability}
-                        :avaliability #{:social-disorder}
-                        :social-disorder #{:safety}}
-                       :elements
-                       {:social-disorder    {:label "Social Disorder"}
-                        :avaliability       {:label "Avaliability of Junk Food"
-			                                       :ui.class ["big" "red"]}
-                        :poverty            {:label "Poverty"
-			                                       :ui.class ["big" "green"]}
-                        :stress             {:label "Stress"}
-                        :safety             {:label "Perceived Neighbourhood Safety"}
-                        :financial-stablity {:label "Financial Stablity"}
-                        :jobs               {:label "Jobs"
-			                                       :ui.class "green"}
-                        :kids-off-streets   {:label "Kids off the Streets"}
-                        :government-support {:label "Government Support"}
-                        :meals              {:label "Healthy Meals per Day"}
-                        :mental-health      {:label "Mental Health"}
-                        :marketing          {:label "Unhealthy Marketing"}
-                        :vending-machines   {:label "Vending Machines"}
-                        :vegetable          {:label "Fruit and Vegetable"
-			                                       :ui.class "green"}}})
-      :style [["node.green" {:fill-color "green"}]
-              ["node.red"   {:fill-color "red"}]
-              ["node.big"   {:size "20px"}]]})
-    (gs/display))
+```clojure
+(browser :title "Hello There")
+;=> "Simple"
 ```
 
-We can then render the same graph with styling:
+And we can change the title as follows:
 
-![styled graph](https://cloud.githubusercontent.com/assets/1455572/9034701/62992498-39ef-11e5-890d-d080c769b7cc.png)
+```clojure
+(browser :title "Hello There")
+```
+
+![change title](https://cloud.githubusercontent.com/assets/1455572/9192531/94734b02-4029-11e5-81e7-09696d775116.png)
+
+### Changing DOM
+
+We can change elements that we want to display by placing a new dom element. This time, we use a map instead of a key value pair to update our browser:
+
+```clojure
+(browser {:title "Triangle"
+          :dom {:a {:label "a"}
+                :b {:label "b"}
+                :c {:label "c"}
+                [:a :b] {:label "a->b" :ui.class "sinking"}
+                [:b :c] {:label "b->c"}
+                [:c :a] {:label "c->a"}}})
+```
+
+![dom manipulation](https://cloud.githubusercontent.com/assets/1455572/9192577/d64d3d58-4029-11e5-93a7-0dc5813ea5e8.png)
+
+### Styling DOM
+
+Note the use of `:ui.class` on the `[:a :b]` edge. This is exactly the same concept as rendering html. We can now style our browser using the following call:
+
+```clojure
+(browser :style [["node#a" {:fill-color "green"
+                              :text-size "20px"
+                              :size  "30px"}]
+                 ["node#b" {:fill-color "red"
+                            :text-size "20px"
+                            :size  "20px"}]
+                 ["node" {:fill-color "black"
+                          :size  "10px"
+                          :shape "box"
+                          :text-size "10px"}]
+                 ["edge" {:fill-color "gray"
+                          :arrow-size "5px, 5px"}]
+                 ["edge.sinking"
+                  {:fill-color "blue"
+                   :arrow-size "10px, 10px"}]])
+```
+
+The result can be seen as follows:
+
+![styling](https://cloud.githubusercontent.com/assets/1455572/9192614/30473fe8-402a-11e5-8275-2b48cb86f953.png)

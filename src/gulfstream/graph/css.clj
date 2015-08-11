@@ -1,7 +1,8 @@
 (ns gulfstream.graph.css
   (:require [hara.object :as object]
             [garden.core :as css]
-            [gulfstream.util :as util])
+            [gulfstream.util :as util]
+            [clojure.string :as string])
   (:import [com.steadystate.css.parser CSSOMParser]
            [org.w3c.css.sac InputSource]
            [java.io StringReader]))
@@ -52,7 +53,7 @@
    => (str \"node {\n  shape: freeplane;\n}\")"
   {:added "0.1"}
   [v]
-  (apply css/css v))
+  (string/join "\n" (map css/css v)))
 
 (defn get-stylesheet
   "accessor function for graph stylesheet property
