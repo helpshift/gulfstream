@@ -1,6 +1,6 @@
 # gulfstream
 
-Wickedly simple graph visualization
+wickedly simple graph visualization
 
 ## Installation
 
@@ -16,14 +16,9 @@ Functionality is in the core namespace:
 (require '[gulfstream.core :as gs])
 ```
 
-## Motivation
-
-[gulfstream]() uses the [graphstream](http://graphstream-project.org/) to allow simple
-
-
 ## Quickstart
 
-Lets draw the most simple graph we possibly could:
+[gulfstream]() leverages [graphstream](http://graphstream-project.org/) to allow for easy to use visualisations of data. Lets draw the most simple graph we possibly could:
 
 ```clojure
 (def browser (gs/browse {:title "Simple"

@@ -22,8 +22,9 @@
                   [:a :b] {:label "a->b" :ui.class "sinking"}
                   [:b :c] {:label "b->c"}
                   [:c :a] {:label "c->a"}}})
-  
-  
+
+  (browser :node)
+
   (browser :style [["node#a" {:fill-color "green"
                               :text-size "20px"
                               :size  "30px"}]
@@ -38,8 +39,4 @@
                             :arrow-size "5px, 5px"}]
                    ["edge.sinking"
                     {:fill-color "blue"
-                     :arrow-size "10px, 10px"}]])
-  
-  
-
-   )
+                     :arrow-size "10px, 10px"}]]))
