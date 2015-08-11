@@ -22,8 +22,9 @@
  Browser
  {:tag "browser"
   :default false
-  ;; This will replace all getters and setters except the `:dom` key when using hara.object 2.2.6
+  ;; This will replace all getters and setters except the `:dom` key when using hara.object 2.2.7
   :proxy   {:graph [:attributes :style :title]}
+
   :getters {:attributes #(object/access (:graph %) :attributes)
             :style      #(object/access (:graph %) :style)
             :dom        #(-> % :dom deref)

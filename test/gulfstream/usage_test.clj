@@ -13,7 +13,7 @@
   => {:getters (:attributes :style :dom :title), :setters (:attributes :style :dom :title)}
 
   
-  (browser :title "Hello There")
+  (browser :title)
   
   (browser {:title "Triangle"
             :dom {:a {:label "a"}

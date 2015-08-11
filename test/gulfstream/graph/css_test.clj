@@ -7,7 +7,8 @@
 (fact "splits up a property pair into a vector for input into a map"
 
   (property-pair "hello : world")
-  => [:hello  "world"])
+  => [:hello "world"]
+  )
 
 ^{:refer gulfstream.graph.css/emit :added "0.1"}
 (fact "transforms a clojure datastructure into a css string"

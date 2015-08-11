@@ -94,3 +94,9 @@ Note the use of `:ui.class` on the `[:a :b]` edge. This is exactly the same conc
 The result can be seen as follows:
 
 ![styling](https://cloud.githubusercontent.com/assets/1455572/9192614/30473fe8-402a-11e5-8275-2b48cb86f953.png)
+
+## License
+
+Copyright © 2015 Helpshift Pty Ltd
+
+Distributed under the Eclipse License

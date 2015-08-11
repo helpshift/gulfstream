@@ -14,9 +14,9 @@
    => [:hello  \"world\"]"
   {:added "0.1"}
   [text]
-  (let [props (-> text .toString (clojure.string/split #": "))]
+  (let [props (-> text .toString (string/split #": "))]
     (-> props
-        (update-in [0] keyword))))
+        (update-in [0] (comp keyword string/trim)))))
 
 (defn rule-pair [rule]
   (let [k  (->> rule
@@ -25,7 +25,7 @@
                 (map str))
         k  (if (= 1 (count k))
              (-> k first keyword)
-             (clojure.string/join " " k))
+             (string/join " " k))
         v  (->> (.getProperties (.getStyle rule))
                 (map property-pair)
                 (into {}))]
