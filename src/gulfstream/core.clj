@@ -1,20 +1,30 @@
 (ns gulfstream.core
   (:require [gulfstream.graph :as graph]
             [gulfstream.graph.dom :as dom]
+            [gulfstream.util :as util]
             [hara.data.diff :as diff]
             [hara.object :as object]))
 
 (defonce +current+ nil)
 
-(defrecord Browser [])
+(defrecord Browser []
+  clojure.lang.IFn
+  (invoke [obj]     (object/access obj))
+  (invoke [obj k]   (object/access obj k))
+  (invoke [obj k v] (object/access obj k v)))
 
 (defmethod print-method Browser
   [v w]
   (.write w (str (into {} v))))
 
-(defn browse [{:keys [dom style attributes options listeners] :as m}]
-  (let [graph   (graph/graph {:dom dom :style style :attributes attributes})
-        more    (dissoc m :dom :style :attributes)
+(defn browse
+  "returns a browser object for viewing and updating a graph. The browser includes
+   a shadow dom so that any changes reflected within the shadow dom will be reflected in
+   the front end"
+  {:added "0.1"}
+  [{:keys [dom style attributes title options listeners] :as m}]
+  (let [graph   (graph/graph {:dom dom :style style :attributes attributes :title title})
+        more    (dissoc m :dom :style :attributes :title)
         shadow  (atom dom)
         {:keys [keyboard node]} listeners
         viewer  (graph/display graph options)
@@ -28,9 +38,10 @@
                                       :dom    shadow
                                       :viewer viewer}
                                      more))]
+
     (add-watch shadow :pipeline
                (fn [_ _ p n]
-                 (dom/patch-dom graph (diff/diff n p)))) 
+                 (dom/patch-dom graph (diff/diff n p))))
     (alter-var-root #'+current+ (constantly browser))
     browser))
 
@@ -39,10 +50,12 @@
  Browser
  {:tag "browser"
   :default false
+  ;; This will replace all getters and setters except the `:dom` key when using hara.object 2.2.6
+  :proxy   {:graph [:attributes :style :title]}
   :getters {:attributes #(object/access (:graph %) :attributes)
             :style      #(object/access (:graph %) :style)
             :dom        #(-> % :dom deref)
-            :title      #(-> (:graph %) (object/access :attributes) :ui.title)}
+            :title      #(object/access (:graph %) :title)}
   :setters {:attributes (fn [b attrs]
                           (object/access (:graph b) :attributes attrs)
                           b)
@@ -53,35 +66,5 @@
                           (reset! (:dom b) dom)
                           b)
             :title      (fn [b title]
-                          (object/access (:graph b) :attributes {:ui.title title})
+                          (object/access (:graph b) :title title)
                           b)}})
-
-(comment
-
-  (object/access +current+ :dom {:c {:label "c"}
-                                 :b {:label "b"}
-                                 :a {:label "a" :ui.class ["selected"]}
-                                 [:c :a] {}
-                                 [:b :c] {}})
-  
-
-  (reset! (:dom +current+)  {:c {:label "c"}
-                             :a {:label "a" :ui.class ["selected"]}
-                             [:c :a] {}})
-
-  (object/access (:graph +current+) :dom)
-  ;;{:getters (:node-set :edge-set :strict? :index :step :attributes :dom :style), :setters (:index :attributes :dom :style)}
-
-  (object/access (:graph +current+) :style [[:node.selected {:fill-color "red"
-                                                             :size "20px"}]])
-
-
-  #_(def keyboard
-      {KeyEvent/VK_ESCAPE  :escape
-       KeyEvent/VK_ENTER   :enter
-       KeyEvent/VK_SPACE   :space
-       KeyEvent/VK_SHIFT   :shift
-       KeyEvent/VK_CONTROL :control
-       KeyEvent/VK_META    :meta
-       KeyEvent/VK_ALT     :alt}))
-

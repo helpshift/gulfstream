@@ -10,6 +10,27 @@
 (defonce +current-camera+ nil)
 
 (defn graph
+  "creates a di-graph for visualization
+   (-> (graph {:title \"Hello World\"
+                           :dom {:a {:label \"A\"
+                                     :ui.class \"top\"}
+                                 :b {:label \"B\"}
+                                 :c {:label \"C\"}
+                                 [:a :b] {:label \"a->b\"}}})
+       (object/to-data))
+  => {:title \"Hello World\"
+       :dom {[:a :b] {:label \"a->b\"}
+             :a {:label \"A\" :ui.class \"top\"}
+             :b {:label \"B\"} :c {:label \"C\"}}
+       :attributes {}
+       :step 0.0
+       :index 0
+       :strict? true
+       :edge-set [{:attributes {:label \"a->b\"} :id [:a :b]}]
+       :node-set [{:attributes {:label \"C\"} :id :c}
+                  {:attributes {:label \"B\"} :id :b}
+                  {:attributes {:label \"A\" :ui.class \"top\"} :id :a}]}"
+  {:added "0.1"}
   ([] (graph {}))
   ([{:keys [style dom attributes title] :as config}]
    (let [graph  (MultiGraph. title)]
@@ -17,7 +38,14 @@
      (->> (select-keys config [:dom :style :attributes :title])
           (object/access graph)))))
 
-(defn element [graph id]
+(defn element
+  "accesses the element within a graph
+   
+   (-> (element +current-graph+ :a)
+       object/to-data)
+   => {:attributes {:label \"A\", :ui.class \"top\"}, :id :a}"
+  {:added "0.1"}
+  [graph id]
   (if (vector? id)
     (.getEdge graph (->> (map string/to-string id)
                          (join "->")))
@@ -29,6 +57,8 @@
     (.removeMouseListener view listener)))
 
 (defn display
+  "displays the graph in a seperate window"
+  {:added "0.1"}
   ([graph] (display graph {}))
   ([graph options]
    (let [viewer (doto (.display graph)
@@ -41,7 +71,10 @@
      (alter-var-root #'+current-camera+ (constantly (.getCamera (.getDefaultView viewer))))
      viewer)))
 
-(defn add-node-listener [viewer {:keys [on-push on-release on-exit]}]
+(defn add-node-listener
+  "adds a listener for updates to node click events"
+  {:added "0.1"}
+  [viewer {:keys [on-push on-release on-exit]}]
   (let [pipe (doto (.newViewerPipe viewer)
                (.addViewerListener (reify org.graphstream.ui.view.ViewerListener
                                      (buttonPushed [_ id]
@@ -58,7 +91,10 @@
               (recur)))))
     viewer))
 
-(defn add-key-listener [viewer {:keys [on-push on-release on-typed]}]
+(defn add-key-listener
+  "adds a listener for key change events"
+  {:added "0.1"}
+  [viewer {:keys [on-push on-release on-typed]}]
   (.addKeyListener (.getDefaultView viewer)
                    (reify java.awt.event.KeyListener
                      (keyPressed [_ e]

@@ -6,6 +6,8 @@
             [gulfstream.graph.css :as css]))
 
 (defn get-attributes
+  "gets the attribute of a graph, node or element as a map"
+  {:added "0.1"}
   [element]
   (let [res (reduce (fn [out k]
                       (assoc out (keyword k) (.getAttribute element k)))
@@ -15,6 +17,8 @@
       (dissoc res :ui.stylesheet :ui.title))))
 
 (defn set-attributes
+  "sets the attribute of a graph, node or element in the form of a map"
+  {:added "0.1"}
   [element attrs]
   (reduce-kv (fn [element k v]
                (if (or (nil? v)

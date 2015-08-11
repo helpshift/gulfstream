@@ -6,7 +6,13 @@
            [org.w3c.css.sac InputSource]
            [java.io StringReader]))
 
-(defn property-pair [text]
+(defn property-pair
+  "splits up a property pair into a vector for input into a map
+ 
+   (property-pair \"hello : world\")
+   => [:hello  \"world\"]"
+  {:added "0.1"}
+  [text]
   (let [props (-> text .toString (clojure.string/split #": "))]
     (-> props
         (update-in [0] keyword))))
@@ -25,7 +31,13 @@
 
     [k v]))
 
-(defn parse [st]
+(defn parse
+  "transforms a css-string into a clojure datastructure
+ 
+   (parse \"node {\n  shape: freeplane;\n}\")
+   => [[:node {:shape \"freeplane\"}]]"
+  {:added "0.1"}
+  [st]
   (let [stream (StringReader. st)
        source  (InputSource. stream)
        parser  (CSSOMParser.)
@@ -33,16 +45,37 @@
        rule-list (.getRules (.getCssRules stylesheet))]
    (mapv rule-pair rule-list)))
 
-(defn emit [v]
+(defn emit
+  "transforms a clojure datastructure into a css string
+   
+   (emit [[:node {:shape \"freeplane\"}]])
+   => (str \"node {\n  shape: freeplane;\n}\")"
+  {:added "0.1"}
+  [v]
   (apply css/css v))
 
 (defn get-stylesheet
+  "accessor function for graph stylesheet property
+ 
+   (-> (graph/graph {:style [[:node {:color \"red\"}]]})
+       (get-stylesheet))
+   => [[:node {:color \"red\"}]]
+   "
+  {:added "0.1"}
   [graph]
   (if-let [css (.getAttribute graph "ui.stylesheet")]
     (parse css)))
 
  (defn set-stylesheet
-   [graph stylesheet]
+  "setter function for graph stylesheet property
+   
+   (-> (graph/graph {})
+       (set-stylesheet [[:node {:color \"red\"}]])
+       (get-stylesheet))
+   => [[:node {:color \"red\"}]]"
+  {:added "0.1"}
+  [graph stylesheet]
    (if stylesheet
         (.setAttribute graph "ui.stylesheet"
-                       (util/attribute-array (emit (seq stylesheet))))))
+                       (util/attribute-array (emit (seq stylesheet)))))
+   graph)
