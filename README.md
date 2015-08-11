@@ -1,6 +1,8 @@
 # gulfstream
 
-wickedly simple graph visualization
+![build status](https://travis-ci.org/helpshift/gulfstream.svg?branch=master)
+
+Wickedly simple graph visualization
 
 ## Installation
 
@@ -94,6 +96,11 @@ Note the use of `:ui.class` on the `[:a :b]` edge. This is exactly the same conc
 The result can be seen as follows:
 
 ![styling](https://cloud.githubusercontent.com/assets/1455572/9192614/30473fe8-402a-11e5-8275-2b48cb86f953.png)
+
+
+## Examples
+
+More examples to come.
 
 ## License
 
