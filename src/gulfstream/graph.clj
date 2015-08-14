@@ -12,24 +12,22 @@
 (defn graph
   "creates a di-graph for visualization
    (-> (graph {:title \"Hello World\"
-                           :dom {:a {:label \"A\"
-                                     :ui.class \"top\"}
-                                 :b {:label \"B\"}
-                                 :c {:label \"C\"}
-                                 [:a :b] {:label \"a->b\"}}})
+               :dom {:nodes {:a {:label \"A\"
+                                 :ui.class \"top\" }
+                             :b {:label \"B\"}
+                             :c {:label \"C\"}}
+                     :edges {[:a :b] {:label \"a->b\"}}}})
        (object/to-data))
-  => {:title \"Hello World\"
-       :dom {[:a :b] {:label \"a->b\"}
-             :a {:label \"A\" :ui.class \"top\"}
-             :b {:label \"B\"} :c {:label \"C\"}}
-       :attributes {}
-       :step 0.0
-       :index 0
-       :strict? true
-       :edge-set [{:attributes {:label \"a->b\"} :id [:a :b]}]
-       :node-set [{:attributes {:label \"C\"} :id :c}
-                  {:attributes {:label \"B\"} :id :b}
-                  {:attributes {:label \"A\" :ui.class \"top\"} :id :a}]}"
+  => {:title \"Hello World\",
+       :dom {:nodes {:a {:label \"A\", :ui.class \"top\"},
+                     :b {:label \"B\"},
+                     :c {:label \"C\"}},
+             :edges {[:a :b] {:label \"a->b\"}}},
+       :attributes {}, :step 0.0, :index 0, :strict? true,
+       :edge-set [{:attributes {:label \"a->b\"}, :id [:a :b]}],
+       :node-set [{:attributes {:label \"C\"}, :id :c}
+                  {:attributes {:label \"B\"}, :id :b}
+                  {:attributes {:label \"A\", :ui.class \"top\"}, :id :a}]}"
   {:added "0.1"}
   ([] (graph {}))
   ([{:keys [style dom attributes title] :as config}]
@@ -104,12 +102,3 @@
                      (keyTyped [_ e]
                        ((or on-typed identity) e))))
   viewer)
-
-
-(comment
-  (display (graph {:dom {:a {:label "a"}
-                         :b {:label "b"}
-                         [:a :b] {}}
-                   :style [[:node.selected {:size "20px"}]]}))
-  +current-graph+
-  )

@@ -27,7 +27,7 @@
   :setters {:dom (fn [b dom] (reset! (:dom b) dom) b)}})
 
 (defn browse
-  "returns a browser object for viewing and updating a graph. The browser includes
+  "returns a browser object for viewing and updating a graph. The browser includes 
    a shadow dom so that any changes reflected within the shadow dom will be reflected in
    the front end"
   {:added "0.1"}

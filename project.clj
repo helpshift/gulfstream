@@ -9,5 +9,6 @@
                  [im.chit/hara.object "2.2.7"]
                  [im.chit/hara.data.diff "2.2.6"]
                  [org.graphstream/gs-ui "1.3"]]
-  :profiles {:dev {:dependencies [[midje "1.7.0"]]
+  :profiles {:dev {:dependencies [[midje "1.7.0"]
+                                  [helpshift/hydrox "0.1.0"]]
                   :plugins [[lein-midje "3.1.3"]]}})

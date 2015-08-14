@@ -6,11 +6,10 @@
             [clojure.string :as string]))
 
 (defn get-dom
-  "Sets the nodes
-   (reset-graph)
-   
-   (get-dom graph/+current-graph+)
-   => {:nodes {:a {:label \"a\"}, :b {:label \"b\"}, :c {:label \"c\"}}}"
+  "Gets the nodes and edges of the graph
+   (get-dom (reset-graph))
+   => {:nodes {:a {:label \"a\"}, :b {:label \"b\"}, :c {:label \"c\"}}
+       :edges {[:a :b] {:label \"a->b\"}}}"
   {:added "0.1"}
   [graph]
   (let [to-map (fn [data] (zipmap (map :id data) (map (fn [data] (or (:attributes data) {})) data)))]
@@ -18,13 +17,19 @@
               :nodes (to-map (object/to-data (.getNodeSet graph))))))
 
 (defn node
-  "Accesses a node in the graph"
+  "Accesses a node within the graph
+   (-> (node (reset-graph) :a)
+       (object/to-data))
+   => {:attributes {:label \"a\"}, :id :a}"
   {:added "0.1"}
   [graph k]
   (.getNode graph (s/to-string k)))
 
 (defn edge
-  "Accesses an edge in the graph"
+  "Accesses an edge within the graph  
+   (-> (edge (reset-graph) [:a :b])
+       (object/to-data))
+   => {:attributes {:label \"a->b\"}, :id [:a :b]}"
   {:added "0.1"}
   [graph k]
   (.getEdge graph (->> (map s/to-string k)
@@ -32,7 +37,7 @@
 
 (defn element
   "Accesses the element in the graph, be it a node or a cess
-   (-> (element graph/+current-graph+ :a)
+   (-> (element (reset-graph) :a)
        (object/to-data))
    => {:attributes {:label \"a\"}, :id :a}"
   {:added "0.1"}
@@ -43,18 +48,41 @@
         (vector? k)
         (edge graph k)))
 
-(defn make-patch-element [m type k sign]
+(defn make-patch-element
+  "creates an entry for patching a element
+   (make-patch-element {} :nodes :a :+)
+   => {:nodes {:+ #{:a}}}"
+  {:added "0.1"}
+  [m type k sign]
   (update-in m [type sign] (fnil #(conj % k) #{})))
 
-(defn make-patch-attributes [out arr v sign]
+(defn make-patch-attributes
+  "creates an entry for patching element attributes
+   (make-patch-attributes {} [:nodes :a] {:label \"hello\"} :-)
+   => {:attributes {:- {:nodes {:a {:label \"hello\"}}}}}
+ 
+   (make-patch-attributes {} [:nodes] {:a {:label \"hello\"}} :-)
+   => {:attributes {:- {:nodes {:a {:label \"hello\"}}}}}"
+  {:added "0.1"}
+  [out arr v sign]
   (let [arr (concat [:attributes sign] arr)]
     (case (count arr)
       3 (update-in out arr merge v)
       4 (assoc-in out arr v))))
 
 (defn make-patch
-    {:added "0.1"}
-    [diff]
+  "creates a patch for updating the graph from a data diff
+   (make-patch {:> {},
+                    :- {},
+                    :+ {[:nodes :c] {:label \"c\"},
+                        [:nodes :b] {:label \"b\"},
+                        [:nodes :a] {:label \"a\"}}})
+   => {:attributes {:+ {:b {:label \"b\"},
+                        :c {:label \"c\"},
+                       :a {:label \"a\"}}},
+       :nodes {:+ #{:c :b :a}}}"
+  {:added "0.1"}
+  [diff]
     (let [ele-fn  (fn [output pos-sign diff-sign]
                     (reduce-kv (fn [out arr v]
                                  (if (= 2 (count arr))
@@ -71,17 +99,17 @@
         (ele-fn :- :-))))
 
 (defn patch
-  "Takes in a graph and a diff of the graph and applies it
-   (reset-graph)
-   
-   (patch graph/+current-graph+
-          {:nodes {:- #{:b}},
-           :attributes {:+ {:c {:ui.class \"hello\"},
-                            [:a :c] {}}},
-           :edges {:+ #{[:a :c]}}})
-   
-   (get-dom graph/+current-graph+)
-   => {[:a :c] nil, :a {:label \"a\"}, :c {:label \"c\", :ui.class \"hello\"}}"
+  "Takes in a graph and a patch of the graph and applies 
+   (-> (reset-graph)
+       (patch {:nodes {:- #{:b}},
+               :attributes {:+ {:c {:ui.class \"hello\"},
+                                [:a :c] {:ui.class \"world\"}}},
+               :edges {:+ #{[:a :c]}
+                       :- #{[:a :b]}}})
+       (get-dom))
+  => {:nodes {:a {:label \"a\"},
+               :c {:label \"c\", :ui.class \"hello\"}},
+       :edges {[:a :c] {:ui.class \"world\"}}}"
   {:added "0.1"}
   [graph patch]
   (doseq [[source target] (-> patch :edges :-)]
@@ -111,11 +139,31 @@
              graph
              (-> patch :attributes :+)))
 
-(defn diff-dom [graph diff]
+(defn diff-dom
+  "diffs the graph with a set of changes to be made
+   
+   (-> (reset-graph)
+       (diff-dom {:> {},
+                  :- {[:nodes :c] {:label \"c\"}}})
+       (get-dom))
+   => {:nodes {:b {:label \"b\"},
+               :a {:label \"a\"}},
+       :edges {[:a :b] {:label \"a->b\"}}}"
+  {:added "0.1"}
+  [graph diff]
   (->> (make-patch diff)
        (patch graph)))
 
 (defn set-dom
+  "sets the graph to the 
+   (-> (reset-graph)
+       (set-dom {:nodes {:d {:label \"d\"}
+                         :e {:label \"c\"}}
+                 :edges {[:d :e] {:label \"d->e\"}}})
+       (get-dom))
+   => {:nodes {:d {:label \"d\"},
+               :e {:label \"c\"}},
+      :edges {[:d :e] {:label \"d->e\"}}}"
   {:added "0.1"}
   [graph dom]
   (->> (diff/diff (merge {:nodes {} :edges {}} dom) (get-dom graph))

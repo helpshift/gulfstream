@@ -11,7 +11,8 @@
   "splits up a property pair into a vector for input into a map
  
    (property-pair \"hello : world\")
-   => [:hello  \"world\"]"
+   => [:hello \"world\"]
+   "
   {:added "0.1"}
   [text]
   (let [props (-> text .toString (string/split #": "))]
@@ -35,7 +36,7 @@
 (defn parse
   "transforms a css-string into a clojure datastructure
  
-   (parse \"node {\n  shape: freeplane;\n}\")
+   (parse \"node {\\n  shape: freeplane;\\n}\")
    => [[:node {:shape \"freeplane\"}]]"
   {:added "0.1"}
   [st]
@@ -50,7 +51,7 @@
   "transforms a clojure datastructure into a css string
    
    (emit [[:node {:shape \"freeplane\"}]])
-   => (str \"node {\n  shape: freeplane;\n}\")"
+   => (str \"node {\\n  shape: freeplane;\\n}\")"
   {:added "0.1"}
   [v]
   (string/join "\n" (map css/css v)))
