@@ -50,6 +50,6 @@
 
     (add-watch shadow :pipeline
                (fn [_ _ p n]
-                 (dom/patch-dom graph (diff/diff n p))))
+                 (dom/diff-dom graph (diff/diff n p))))
     (alter-var-root #'+current+ (constantly browser))
     browser))
