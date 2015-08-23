@@ -1,8 +1,11 @@
 # gulfstream
 
-![build status](https://travis-ci.org/helpshift/gulfstream.svg?branch=master)
 
-Wickedly simple graph visualization
+[![Build Status](https://travis-ci.org/helpshift/hydrox.svg?branch=master)](https://travis-ci.org/helpshift/gulfstream)
+
+rapid graph visualizations
+
+![gulfstream logo](https://raw.githubusercontent.com/helpshift/gulfstream/master/template/assets/img/gulfstream.png)
 
 ## Installation
 
