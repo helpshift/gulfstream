@@ -163,3 +163,11 @@
 
 [[:image {:src "https://cloud.githubusercontent.com/assets/1455572/9683055/0572ee76-532a-11e5-9d16-b797f15fb4b5.png"
           :width "100%"}]]
+
+
+[[:chapter {:title "Examples"}]]
+
+"More examples to [come](http://openflights.org/data.html).
+ - [todo](http://personality-testing.info/_rawdata/)
+ - [todo 2](http://arcane-coast-3553.herokuapp.com/snas/3)
+"
