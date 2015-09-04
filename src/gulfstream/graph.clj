@@ -57,17 +57,17 @@
 (defn display
   "displays the graph in a seperate window"
   {:added "0.1"}
-  ([graph] (display graph {}))
-  ([graph options]
-   (let [viewer (doto (.display graph)
-                  (.setCloseFramePolicy org.graphstream.ui.view.Viewer$CloseFramePolicy/CLOSE_VIEWER))
-         _      (if (:disable-auto-layout options)
-                  (.disableAutoLayout viewer))
-         _      (if (:disable-mouse options)
-                  (disable-mouse viewer))]
-     (alter-var-root #'+current-viewer+ (constantly viewer))
-     (alter-var-root #'+current-camera+ (constantly (.getCamera (.getDefaultView viewer))))
-     viewer)))
+  [graph]
+  (let [attrs  (object/access graph :attributes)
+        viewer (doto (.display graph)
+                 (.setCloseFramePolicy org.graphstream.ui.view.Viewer$CloseFramePolicy/CLOSE_VIEWER))
+        _      (if (:gs.disable-auto-layout attrs)
+                 (.disableAutoLayout viewer))
+        _      (if (:gs.disable-mouse attrs)
+                 (disable-mouse viewer))]
+    (alter-var-root #'+current-viewer+ (constantly viewer))
+    (alter-var-root #'+current-camera+ (constantly (.getCamera (.getDefaultView viewer))))
+    viewer))
 
 (defn add-node-listener
   "adds a listener for updates to node click events"

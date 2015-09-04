@@ -7,6 +7,12 @@
 
 (defonce +current+ nil)
 
+(defonce +use-advance-viewer+
+  (do (System/setProperty "org.graphstream.ui.renderer"
+                          "org.graphstream.ui.j2dviewer.J2DGraphRenderer")
+      (= (System/getProperty "org.graphstream.ui.renderer")
+         "org.graphstream.ui.j2dviewer.J2DGraphRenderer")))
+
 (defrecord Browser []
   clojure.lang.IFn
   (invoke [obj]     (object/access obj))
@@ -36,7 +42,7 @@
         more    (dissoc m :dom :style :attributes :title)
         shadow  (atom dom)
         {:keys [keyboard node]} listeners
-        viewer  (graph/display graph options)
+        viewer  (graph/display graph)
         viewer  (if node
                   (graph/add-node-listener viewer node)
                   viewer)

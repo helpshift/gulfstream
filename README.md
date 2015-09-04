@@ -1,6 +1,5 @@
 # gulfstream
 
-
 [![Build Status](https://travis-ci.org/helpshift/hydrox.svg?branch=master)](https://travis-ci.org/helpshift/gulfstream)
 
 rapid graph visualizations
@@ -12,7 +11,7 @@ rapid graph visualizations
 Add to `project.clj`:
 
 ```clojure
-[helpshift/gulfstream "0.1.6"]
+[helpshift/gulfstream "0.2.1"]
 ```
 
 Functionality is in the core namespace:
@@ -103,10 +102,12 @@ The result can be seen as follows:
 
 ## Examples
 
-More examples to come.
+More examples to [come](http://openflights.org/data.html).
+ - [todo](http://personality-testing.info/_rawdata/)
+ - [todo 2](http://arcane-coast-3553.herokuapp.com/snas/3)
 
 ## License
 
-Copyright © 2015 Helpshift Pty Ltd
+Copyright © 2015 [Helpshift](http://www.helpshift.com)
 
 Distributed under the Eclipse License
