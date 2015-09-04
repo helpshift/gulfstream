@@ -1,4 +1,4 @@
 [submodule "docs"]
 	path = docs
-	url = git@github.com:helpshift/gulfstream.git
+	url = https://github.com/helpshift/gulfstream.git
 	branch = gh-pages
