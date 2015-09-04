@@ -1,0 +1,162 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <meta name="google" value="notranslate">
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+
+    <title>gulfstream</title>
+
+    
+  <link href='http://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
+
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/clojure.min.js"></script>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/magula.min.css">
+
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular.min.js"></script>
+  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular-cookies.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.0/ui-bootstrap-tpls.min.js"></script>
+  <script type="text/javascript" src="js/angular-highlightjs.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="css/rdash.min.css">
+  <link rel="stylesheet" type="text/css" href="css/scrollspy.css">
+
+
+  <script>
+    window.console = window.console || function(t) {};
+    window.open = function(){ console.log("window.open is disabled."); };
+    window.print   = function(){ console.log("window.print is disabled."); };
+  </script>
+
+  <script>
+    var app = angular.module('app', ['hljs']);
+  </script>
+  </head>
+
+  <body ng-app="app" data-spy="scroll" data-target=".scrollspy">
+  <!-- Fixed navbar -->
+    <nav class="navbar navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html"><img src="img/logo-white.png"></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+              <a href="https://github.com/helpshift/gulfstream" target="_blank">Github</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+
+  <div class="container row">
+    <div class="col-md-4 scrollspy pull-right">
+      <ul id="nav" class="nav hidden-xs hidden-sm" data-spy="affix">
+        <li><a href="#introduction">1  &nbsp;&nbsp; Introduction</a><ul class="nav"><li><a href="#overview">1.1  &nbsp;&nbsp; Overview</a></li><li><a href="#installation">1.2  &nbsp;&nbsp; Installation</a></li></ul></li><li><a href="#quickstart">2  &nbsp;&nbsp; Quickstart</a><ul class="nav"><li><a href="#simple-graph">2.1  &nbsp;&nbsp; Simple Graph</a></li><li><a href="#styling">2.2  &nbsp;&nbsp; Styling</a></li><li><a href="#properties">2.3  &nbsp;&nbsp; Properties</a></li><li><a href="#dom-access">2.4  &nbsp;&nbsp; DOM access</a></li><li><a href="#more-customisations">2.5  &nbsp;&nbsp; More Customisations</a></li></ul></li>
+      </ul>
+    </div>
+    <div class="col-md-8" id="content">
+      <div class="jumbotron">
+        <div class="container">
+          <h1>gulfstream</h1>
+          <h4>rapid graph visualizations</h4>
+        </div>
+      </div>
+      <section class="chapter" id="introduction"><h2 class="chapter">1  &nbsp;&nbsp; Introduction</h2><section class="section" id="overview"><h3 class="section">1.1  &nbsp;&nbsp; Overview</h3><div class="paragraph"><p><a href='https://github.com/helpshift/gulfstream'>gulfstream</a> leverages <a href='http://graphstream-project.org/'>graphstream</a> to allow for easy to use visualisations of data.</p></div></section><section class="section" id="installation"><h3 class="section">1.2  &nbsp;&nbsp; Installation</h3><div class="paragraph"><p>In your project.clj, add gulfstream to the <code>&#91;:dependencies&#93;</code> entry:</p><pre><code class="clojure">&#40;defproject ...
+    ...
+    :dependencies &#91;...
+                   &#91;helpshift/gulfstream &quot;0.2.1&quot;&#93;
+                   ...&#93;}}
+    ...&#41;
+</code></pre></div><div class="paragraph"><p>All functionality is the <code>gulfstream.core</code> namespace:</p></div><div class="code"><div hljs="hljs" language="clojure" no-escape="no-escape">(require '[gulfstream.core :as gs])</div></div></section></section><section class="chapter" id="quickstart"><h2 class="chapter">2  &nbsp;&nbsp; Quickstart</h2><section class="section" id="simple-graph"><h3 class="section">2.1  &nbsp;&nbsp; Simple Graph</h3><div class="paragraph"><p>Lets go ahead and draw the most simple graph we possibly could:</p></div><div class="code"><div hljs="hljs" language="clojure" no-escape="no-escape">(def browser
+  (gs/browse {:title &quot;Simple&quot;
+              :dom {:nodes {:a {:label &quot;a&quot;}
+                            :b {:label &quot;b&quot;}}
+                    :edges {[:a :b] {:label &quot;a-&gt;b&quot;}}}}))</div></div><div class="paragraph"><p>We should see a window popping up as follows:</p></div><div class="figure"><a name="img-https----cloud-githubusercontent-com--assets--1455572--9682239--5abe94be-5322-11e5-9bec-d1f82b0c7f13-png"></a><div class="img"><img src="https://cloud.githubusercontent.com/assets/1455572/9682239/5abe94be-5322-11e5-9bec-d1f82b0c7f13.png" width="100%" /></div></div></section><section class="section" id="styling"><h3 class="section">2.2  &nbsp;&nbsp; Styling</h3><div class="paragraph"><p>The window shows a label for the edge <code>a-&gt;b</code> but the labels <code>a</code> and <code>b</code> are hidden. We can expose it by adjusting the style of the browser:</p></div><div class="code"><div hljs="hljs" language="clojure" no-escape="no-escape">(browser :style [[:node {:text-alignment :under}]])</div></div><div class="figure"><a name="img-https----cloud-githubusercontent-com--assets--1455572--9682243--5d72768a-5322-11e5-886c-b7ec4b5e89f4-png"></a><div class="img"><img src="https://cloud.githubusercontent.com/assets/1455572/9682243/5d72768a-5322-11e5-886c-b7ec4b5e89f4.png" width="100%" /></div></div><div class="paragraph"><p>We can change the look of our graph some more by specifying more styles:</p></div><div class="code"><div hljs="hljs" language="clojure" no-escape="no-escape">(browser :style [[:node {:fill-color :green
+                         :size &quot;20px&quot;
+                         :text-size &quot;15px&quot;
+                         :text-alignment :under}]
+                 [:edge {:text-size &quot;15px&quot;
+                         :stroke-mode &quot;dashes&quot;}]])</div></div><div class="figure"><a name="img-https----cloud-githubusercontent-com--assets--1455572--9682359--9f3a7620-5323-11e5-86ae-6cd4250b55f8-png"></a><div class="img"><img src="https://cloud.githubusercontent.com/assets/1455572/9682359/9f3a7620-5323-11e5-86ae-6cd4250b55f8.png" width="100%" /></div></div></section><section class="section" id="properties"><h3 class="section">2.3  &nbsp;&nbsp; Properties</h3><div class="paragraph"><p>We can see what properties are accessible by calling browser with no arguments:</p></div><div class="code"><div hljs="hljs" language="clojure" no-escape="no-escape">(browser)
+=&gt; {:getters (:title :style :attributes :dom)
+    :setters (:title :style :attributes :dom)}</div></div><div class="paragraph"><p>It can be seen that there are four properties that we can apply getters and setters to. For instance, we can access the <code>:title</code> like this:</p></div><div class="code"><div hljs="hljs" language="clojure" no-escape="no-escape">(browser :title)
+=&gt; &quot;Simple&quot;</div></div><div class="paragraph"><p>And we can change the title as follows:</p></div><div class="code"><div hljs="hljs" language="clojure" no-escape="no-escape">(browser :title &quot;Hello There&quot;)</div></div><div class="paragraph"><p>Which will update the title of our graph</p></div><div class="code"><div hljs="hljs" language="clojure" no-escape="no-escape">(browser :title)
+=&gt; &quot;Hello There&quot;</div></div><div class="figure"><a name="img-https----cloud-githubusercontent-com--assets--1455572--9682454--65f83a5e-5324-11e5-8213-961906f1dd1b-png"></a><div class="img"><img src="https://cloud.githubusercontent.com/assets/1455572/9682454/65f83a5e-5324-11e5-8213-961906f1dd1b.png" width="100%" /></div></div></section><section class="section" id="dom-access"><h3 class="section">2.4  &nbsp;&nbsp; DOM access</h3><div class="paragraph"><p>Similarily, we can access the dom by calling browser with the <code>:dom</code> key:</p></div><div class="code"><div hljs="hljs" language="clojure" no-escape="no-escape">(browser :dom)
+=&gt; {:nodes {:a {:label &quot;a&quot;}
+            :b {:label &quot;b&quot;}},
+    :edges {[:a :b] {:label &quot;a-&gt;b&quot;}}}</div></div><div class="paragraph"><p>We can also set dom elements as follows:</p></div><div class="code"><div hljs="hljs" language="clojure" no-escape="no-escape">(browser :dom
+         {:nodes {:a {:label &quot;a&quot;}
+                  :b {:label &quot;b&quot;}
+                  :c {:label &quot;c&quot;}},
+          :edges {[:a :b] {:label &quot;a-&gt;b&quot;}
+                  [:b :c] {:label &quot;b-&gt;c&quot;}
+                  [:c :a] {:label &quot;c-&gt;a&quot;}}})</div></div><div class="figure"><a name="img-https----cloud-githubusercontent-com--assets--1455572--9682544--47114008-5325-11e5-8b92-5d9c3c11968f-png"></a><div class="img"><img src="https://cloud.githubusercontent.com/assets/1455572/9682544/47114008-5325-11e5-8b92-5d9c3c11968f.png" width="100%" /></div></div></section><section class="section" id="more-customisations"><h3 class="section">2.5  &nbsp;&nbsp; More Customisations</h3><div class="paragraph"><p>We can do more customisations on our graph by adding edges as well as changing shapes:</p></div><div class="code"><div hljs="hljs" language="clojure" no-escape="no-escape">(browser :dom
+         {:nodes {:a {:label &quot;a&quot;
+                      :ui.class [&quot;red&quot; &quot;large&quot;]}
+                  :b {:label &quot;b&quot;
+                      :ui.class [&quot;green&quot;]}
+                  :c {:label &quot;c&quot;
+                      :ui.class [&quot;large&quot; &quot;blue&quot;]}}
+          :edges {[:a :b] {:label &quot;a-&gt;b&quot;
+                           :ui.class [&quot;above&quot;]}
+                  [:b :a] {:label &quot;b-&gt;a&quot;
+                           :ui.class [&quot;under&quot;]}
+                  [:b :c] {:label &quot;b-&gt;c&quot;
+                           :ui.class [&quot;above&quot;]}
+                  [:c :b] {:label &quot;c-&gt;b&quot;
+                           :ui.class [&quot;under&quot;]}
+                  [:c :a] {:label &quot;c-&gt;a&quot;
+                           :ui.class [&quot;above&quot;]}
+                  [:a :c] {:label &quot;a-&gt;c&quot;
+                           :ui.class [&quot;under&quot;]}}})
+  
+(browser :style [[:node {:text-size &quot;15px&quot;
+                         :text-alignment :under
+                         :size &quot;15px&quot;}]
+                 [:node.large {:size &quot;30px&quot;}]
+                 [:node#a {:shape &quot;cross&quot;}]
+                 [:node#b {:shape &quot;diamond&quot;}]
+                 [:node#c {:shape &quot;box&quot;}]
+                 [:node.green {:fill-color &quot;green&quot;}]
+                 [:node.red   {:fill-color &quot;red&quot;}]
+                 [:node.blue  {:fill-color &quot;blue&quot;}]
+                 [:edge {:shape &quot;cubic-curve&quot;}]
+                 [:edge.under {:text-alignment &quot;under&quot;
+                               :fill-color &quot;red&quot;}]
+                 [:edge.above {:text-alignment &quot;above&quot;
+                               :fill-color &quot;green&quot;}]])</div></div><div class="figure"><a name="img-https----cloud-githubusercontent-com--assets--1455572--9683055--0572ee76-532a-11e5-9d16-b797f15fb4b5-png"></a><div class="img"><img src="https://cloud.githubusercontent.com/assets/1455572/9683055/0572ee76-532a-11e5-9d16-b797f15fb4b5.png" width="100%" /></div></div></section></section>
+    </div>
+</div><!--end of .container-->
+
+</body>
+
+<script>
+  $('#nav').affix({
+    offset: {
+        top: $('#nav').offset().top,
+        bottom: $('footer').outerHeight(true) + $('.application').outerHeight(true) + 40
+    }});
+</script>
+
+
+<script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+</body>
+</html>
